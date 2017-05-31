@@ -30,9 +30,10 @@ game::game()
 	string token="";
 
 	getline(cin, ligne);
-	cout<<"NoIdea";
 	getline(cin, ligne);
-cout<<"r"<<ligne<<endl;
+	cout<<"NOIDEA";
+	getline(cin, ligne);
+
 
 	int i=0;
 	while(i<ligne.length() && ligne.at(i)!=' ')
@@ -44,9 +45,6 @@ i++;
 
 	this->nbPlayers=StoI(token);
 
-cout<<this->nbPlayers<<endl;
-cout<<"i :"<<i<<ligne.length()<<endl;
-
 
 	token="";
 	while(i<ligne.length())
@@ -57,8 +55,6 @@ cout<<"i :"<<i<<ligne.length()<<endl;
 i++;
 	this->nbTurn=StoI(token);
 
-cout<<"i :"<<i<<ligne.length()<<endl;
-cout<<this->nbTurn<<endl;
 
 
 getline(cin, ligne);
@@ -88,7 +84,6 @@ i++;
 	}
 
 	
-cout<<"name"<<this->joueur.name<<endl;
 
 	token="";
 	while(i<ligne.size() && ligne.at(i)!=' ')
@@ -207,7 +202,7 @@ token="";
 	}
 i++;
 	this->taille_level[0]=StoI(token);
-cout<<"x"<<this->taille_level[0]<<endl;
+
 	token="";
 	while(i<ligne.size())
 	{
@@ -216,13 +211,13 @@ cout<<"x"<<this->taille_level[0]<<endl;
 	}
 i++;
 	this->taille_level[1]=StoI(token);
-cout<<"y"<<this->taille_level[1]<<endl;
+
 
 getline(cin, ligne);
 i=0;
 token="";
 int k=0;
-while(k<this->taille_level[1])
+while(k<this->taille_level[1]-1)
 {
 	this->level.push_back(vector<string>());
 	
@@ -235,7 +230,7 @@ while(k<this->taille_level[1])
 			i++;
 		}
 	this->level[k].push_back(token);
-	cout<<"tab "<<this->level[k].back()<<endl;
+
 	token="";
 	i++;
 	}
@@ -256,11 +251,11 @@ while(k<this->taille_level[1])
 
 bool game::validation_deplacement(string instr)
 {
-	if(instr == "UP" && this->joueur.pos[1] != (this->taille_level[1]-1))
+	if(instr == "UP" && this->joueur.pos[1] != 0)
 	{
-		if(this->level[this->joueur.pos[0]][this->joueur.pos[1]+1] == "G" ||
-			this->level[this->joueur.pos[0]][this->joueur.pos[1]+1] == "I" ||
-			this->level[this->joueur.pos[0]][this->joueur.pos[1]+1] == "H")
+		if(this->level[this->joueur.pos[0]][this->joueur.pos[1]-1] == "G" ||
+			this->level[this->joueur.pos[0]][this->joueur.pos[1]-1] == "I" ||
+			this->level[this->joueur.pos[0]][this->joueur.pos[1]-1] == "H")
 		{
 			return true;
 		}
@@ -268,7 +263,7 @@ bool game::validation_deplacement(string instr)
 
 	else if(instr == "DOWN" && this->joueur.pos[1] != (this->taille_level[1]-1))
 	{
-		if(this->level[this->joueur.pos[0]][this->joueur.pos[1]-1] == "G" ||
+		if(this->level[this->joueur.pos[0]][this->joueur.pos[1]+1] == "G" ||
 			this->level[this->joueur.pos[0]][this->joueur.pos[1]-1] == "I" ||
 			this->level[this->joueur.pos[0]][this->joueur.pos[1]-1] == "H")
 		{
@@ -288,8 +283,8 @@ bool game::validation_deplacement(string instr)
 	else if(instr == "RIGHT" && this->joueur.pos[0] != (this->taille_level[0]-1))
 	{
 		if(this->level[this->joueur.pos[0]+1][this->joueur.pos[1]] == "G" ||
-			this->level[this->joueur.pos[0]-1][this->joueur.pos[1]] == "I" ||
-			this->level[this->joueur.pos[0]-1][this->joueur.pos[1]] == "H")
+			this->level[this->joueur.pos[0]+1][this->joueur.pos[1]] == "I" ||
+			this->level[this->joueur.pos[0]+1][this->joueur.pos[1]] == "H")
 		{
 			return true;
 		}
@@ -372,13 +367,12 @@ vector<string> game::finding_path()
 	vector<int> bonus = finding_bonus();
 	
 	
+	
 }
 
 string game::best_move_for_two()
 {
-	vector<int> bonus = finding_bonus();
-	
-			
+	vector<int> bonus = finding_bonus();		
 
 	return "";
 }
@@ -388,8 +382,103 @@ string game::best_move_for_third()
 	return "";
 }
 
+string game::voisin_pos_bomb()
+{
+	vector<string>voisons
+	if(this->level[this->joueur.pos[0]][this->joueur.pos[1]+1] == "G/1,1,2")
+	{
+		voisins.push_back("BAS");
+	}
+	if(this->level[this->joueur.pos[0]][this->joueur.pos[1]-1] == "G/1,1,2")
+	{
+		voisin.push_back("HAUT");
+	}
+	if(this->level[this->joueur.pos[0]+1][this->joueur.pos[1]] == "G/1,1,2")
+	{
+		voisin.push_back("GAUCHE");
+	}
+	if(this->level[this->joueur.pos[0]-1][this->joueur.pos[1]+1] == "G/1,1,2")
+	{
+		voisin.push_back("DROITE");
+	}
+	return voisins;
+}
+
+bool contains(vector<string>vec, string arg)
+{
+	for(int i = 0; i < vec.size(); i++)
+	{
+		if(vec[i] == arg)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
 string game::best_move_for_fourth()
 {
+	vector<string> voisins = this->voisin_pos_bomb();
+	if(contains(voisins, "BAS"))
+	{
+		if(this->validation_deplacement("LEFT"))
+		{
+			return "LEFT";
+		}
+		else if(this.validation_deplacement("RIGHT"))
+		{
+			return "RIGHT";
+		}
+		else if(this->validation_deplacement("UP"))
+		{
+			return "UP";
+		}
+	}
+	if(contains(voisins, "HAUT"))
+	{
+		if(this->validation_deplacement("LEFT"))
+		{
+			return "LEFT";
+		}
+		else if(this.validation_deplacement("RIGHT"))
+		{
+			return "RIGHT";
+		}
+		else if(this->validation_deplacement("DOWN"))
+		{
+			return "DOWN";
+		}
+	}
+	if(contains(voisins, "DROITE"))
+	{
+		if(this->validation_deplacement("LEFT"))
+		{
+			return "LEFT";
+		}
+		else if(this.validation_deplacement("RIGHT"))
+		{
+			return "RIGHT";
+		}
+		else if(this->validation_deplacement("DOWN"))
+		{
+			return "DOWN";
+		}
+	}
+	if(contains(voisins, "GAUCHE"))
+	{
+		if(this->validation_deplacement("DOWN"))
+		{
+			return "DOWN";
+		}
+		else if(this.validation_deplacement("RIGHT"))
+		{
+			return "RIGHT";
+		}
+		else if(this->validation_deplacement("UP"))
+		{
+			return "UP";
+		}
+	}
 	return "";
 }
 
@@ -398,26 +487,26 @@ void game::best_move(string arg)
 {
 	if(arg == "epreuve1")
 	{
-		this->best_move_for_first();
+		cout<<this->best_move_for_first()<<endl;
 	}
 	else if(arg == "epreuve2")
 	{
-		this->best_move_for_two();
+		cout<<this->best_move_for_two()<<endl;
 	}
 	else if(arg == "epreuve3")
 	{
-		this->best_move_for_third();
+		cout<<this->best_move_for_third()<<endl;
 	}
 	else if(arg == "epreuve4") 
 	{
-		this->best_move_for_fourth();
+		cout<<this->best_move_for_fourth()<<endl;
 	}
 }
 
 
 /*
 3 100
-NOIDEA 3 1 0 3 1 1
+NOIDEA 3 1 0 3 7 1
 LINUS 2 2 10 2 7 7
 DONALD 1 3 50 1 1 7
 9 9
@@ -431,9 +520,11 @@ DONALD 1 3 50 1 1 7
 |X|G|G|O|O|O|G|G|X|
 |X|X|X|X|X|X|X|X|X|
 */
+
 int main(int argc,char ** argv)
 {
 game g=game();
 g.best_move("epreuve1");
-return 0;}
+return 0;
+}
 
