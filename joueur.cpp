@@ -79,11 +79,54 @@ void game::deplacement(string inst)
 
 string game::best_move_for_first()
 {
-	return "";
+	if(this->validation_deplacement("UP"))
+	{
+		return "UP";
+	}
+	else if(this->validation_deplacement("DOWN"))
+	{
+		return "DOWN";
+	}
+	else if(this->validation_deplacement("LEFT"))
+	{
+		return "LEFT";
+	}
+	else if(this->validation_deplacement("RIGHT"))
+	{
+		return "RIGHT";
+	}
+}
+
+vector<int> game::finding_bonus()
+{
+	vector<int> coord = vector<int>(2);
+	for(int i = 0; i < this->taille_level[0]; i++)
+	{
+		for(int j = 0; j < this->taille_level[1]; i++)
+		{	
+			if(this->level[i][j] == "H" || this->level[i][j] == "I")
+			{				
+				coord[0] = i;
+				coord[1] = j;
+			}
+		}
+	}
+	return coord;
+}
+
+vector<string> game::finding_path()
+{
+	vector<int> bonus = finding_bonus();
+	
+	
 }
 
 string game::best_move_for_two()
 {
+	vector<int> bonus = finding_bonus();
+	
+			
+
 	return "";
 }
 
