@@ -1,5 +1,8 @@
 #include<iostream>
 #include<vector>
+#include <stdlib.h>    
+#include <time.h>
+#include<utility>   
 
 using namespace std;
 
@@ -9,6 +12,7 @@ struct player{
 	int power;
 	int score;
 	int ammo;
+	bool alive;
 	int pos[2];
 };
 
@@ -27,6 +31,8 @@ class game{
 		void deplacement(string instruction);
 		bool validation_deplacement(string instruction);
 		void best_move(string trial);
+		vector<int> finding_bonus();
+		vector<string> finding_path();
 		string best_move_for_first();
 		string best_move_for_two();
 		string best_move_for_third();
